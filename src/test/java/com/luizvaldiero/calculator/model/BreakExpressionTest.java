@@ -21,7 +21,7 @@ class BreakExpressionTest {
 		String expression = "-3.+2.533";
 		List<Token> expected = List.of(
 				new Token("-3.", TokenType.NUMBER),
-				new Token("+", TokenType.OPERATOR),
+				new Token("+", TokenType.ADDITION),
 				new Token("2.533", TokenType.NUMBER)
 		);
 		
@@ -44,7 +44,7 @@ class BreakExpressionTest {
 		String expression = "-3./-2.533";
 		List<Token> expected = List.of(
 				new Token("-3.", TokenType.NUMBER),
-				new Token("/", TokenType.OPERATOR),
+				new Token("/", TokenType.DIVISION),
 				new Token("-2.533", TokenType.NUMBER)
 		);
 		

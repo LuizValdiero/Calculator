@@ -17,21 +17,21 @@ public class BreakExpression {
 		int length = expression.length();
 		
 		while (index < length) {
-			Pair<Integer, Token> result = setNextToken(expression, index, length);
+			Pair<Integer, Token> result = getNextToken(expression, index, length);
 			index = result.getFirst();
 			tokens.add(result.getSecond());
 		}
 		return tokens;
 	}
 	
-	public Pair<Integer, Token> setNextToken(String expression, int index, int length) {
+	public Pair<Integer, Token> getNextToken(String expression, int index, int length) {
 		int end = index+1;
 		String caracter = expression.substring(index, end);
 		if ("*".equals(caracter)) {
-			return Pair.of(end, new Token("*", TokenType.OPERATOR));
+			return Pair.of(end, new Token("*", TokenType.MULTIPLICATION));
 		}
 		if ("/".equals(caracter)) {
-			return Pair.of(end, new Token("/", TokenType.OPERATOR));
+			return Pair.of(end, new Token("/", TokenType.DIVISION));
 		}
 		if ("(".equals(caracter)) {
 			return Pair.of(end, new Token("(", TokenType.PARENTHESES_OPEN));
@@ -41,12 +41,12 @@ public class BreakExpression {
 		}
 		if ("+".equals(caracter)) {
 			if(index > 0 && !expression.substring(index-1, index).matches(OPERATORS)) {
-				return Pair.of(end, new Token("+", TokenType.OPERATOR));
+				return Pair.of(end, new Token("+", TokenType.ADDITION));
 			}
 		}
 		if ("-".equals(caracter)) {
 			if(index > 0 && !expression.substring(index-1, index).matches(OPERATORS)) {
-				return Pair.of(end, new Token("-", TokenType.OPERATOR));
+				return Pair.of(end, new Token("-", TokenType.SUBTRACTION));
 			}
 		}
 		while (end < length && !expression.substring(end, end+1).matches(OPERATORS)) end++;
