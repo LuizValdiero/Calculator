@@ -24,7 +24,7 @@ class CalculatorServiceImplTest {
 	void throws_malformed_expression() {
 
 		List<String> expressions = List.of(
-				"--10", "++10", "*10", "/10",
+				"", " ", "--10", "++10", "*10", "/10",
 				"2++1", "2--1", "2//+1", "2//1",
 				"2**2", "2*/2", "2/*2", "10.0.2",
 				"20.0++1", "20.0.3+1", "20.0.3+1",
