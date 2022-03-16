@@ -11,7 +11,7 @@ import com.luizvaldiero.calculator.dto.CalculatorResposeDTO;
 public class CalculatorServiceImpl implements CalculatorService {
 	private static final int N_PRECISION = 2;
 
-	private static final String NUMBER = "\\d+(\\.\\d+)?";
+	private static final String NUMBER = "\\d+\\.?\\d*";
 	private static final String OPERATORS = "((-\\+?)|(\\+-?)|([(\\*)/][\\+-]?))";
 	private static final String VALID_EXPRESSION = "^([\\+-]?" + NUMBER + ")(" + OPERATORS + NUMBER + ")*$";
 	
