@@ -1,30 +1,12 @@
 package com.luizvaldiero.calculator.model;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
 import com.luizvaldiero.calculator.enums.TokenType;
 
 public class ExpressionTreeBuilder {
-	public class ExpressionTreeBuilderControl {
-		List<Token> tokens;
-		Integer index;
-		Integer size;
-		public ExpressionTreeBuilderControl(List<Token> tokens) {
-			super();
-			this.index = 0;
-			this.size = tokens.size();
-			this.tokens = tokens;
-		}
-
-		public Boolean isFinished() {
-			return index >= size;
-		}
-		
-		public Token getNextToken() {
-			return tokens.get(index++);
-		}
-	}
 	
 	public ExpressionNode create(List<Token> tokens) {
 		ExpressionTreeBuilderControl control = new ExpressionTreeBuilderControl(tokens);
@@ -66,7 +48,7 @@ public class ExpressionTreeBuilder {
 			return createNextNode(control, expression);
 		}
 		if (TokenType.DIVISION.equals(nextToken.getType())) {
-			ExpressionNode expression = new BranchExpressionNode((BigDecimal a, BigDecimal b) -> a.divide(b));
+			ExpressionNode expression = new BranchExpressionNode((BigDecimal a, BigDecimal b) -> a.divide(b, RoundingMode.DOWN));
 			expression.setLeft(root);
 			expression.setRight(createNextNode(control, expression));
 			return createNextNode(control, expression);
