@@ -3,8 +3,8 @@ package com.luizvaldiero.calculator.model;
 import com.luizvaldiero.calculator.enums.TokenType;
 
 public class Token {
-	String value;
-	TokenType type;
+	private String value;
+	private TokenType type;
 
 	public Token(String value, TokenType type) {
 		this.value = value;
