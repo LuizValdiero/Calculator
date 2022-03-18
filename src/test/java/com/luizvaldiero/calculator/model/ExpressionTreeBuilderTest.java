@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import com.luizvaldiero.calculator.component.ExpressionTreeBuilder;
 import com.luizvaldiero.calculator.enums.TokenType;
 
 @ExtendWith(SpringExtension.class)

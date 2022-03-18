@@ -1,11 +1,19 @@
-package com.luizvaldiero.calculator.model;
+package com.luizvaldiero.calculator.component;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
 
-import com.luizvaldiero.calculator.enums.TokenType;
+import org.springframework.stereotype.Component;
 
+import com.luizvaldiero.calculator.enums.TokenType;
+import com.luizvaldiero.calculator.model.BranchExpressionNode;
+import com.luizvaldiero.calculator.model.ExpressionNode;
+import com.luizvaldiero.calculator.model.ExpressionTreeBuilderControl;
+import com.luizvaldiero.calculator.model.LeafExpressionNode;
+import com.luizvaldiero.calculator.model.Token;
+
+@Component
 public class ExpressionTreeBuilder {
 	
 	public ExpressionNode create(List<Token> tokens) {
@@ -19,7 +27,7 @@ public class ExpressionTreeBuilder {
 		return root;
 	}
 	
-	public ExpressionNode createNextNode(ExpressionTreeBuilderControl control, ExpressionNode root) {
+	private ExpressionNode createNextNode(ExpressionTreeBuilderControl control, ExpressionNode root) {
 		if (control.isFinished()) {
 			return root;
 		}

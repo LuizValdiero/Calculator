@@ -1,13 +1,15 @@
-package com.luizvaldiero.calculator.model;
+package com.luizvaldiero.calculator.component;
 
 import java.util.LinkedList;
 import java.util.List;
 
 import org.springframework.data.util.Pair;
+import org.springframework.stereotype.Component;
 
 import com.luizvaldiero.calculator.enums.TokenType;
+import com.luizvaldiero.calculator.model.Token;
 
-
+@Component
 public class BreakExpression {
 	private static final String OPERATORS = "^(\\+|-|\\*|/)$";
 	
