@@ -3,8 +3,7 @@ package com.luizvaldiero.calculator.service;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
-
-import javax.validation.Valid;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,7 +13,9 @@ import com.luizvaldiero.calculator.component.ExpressionTreeBuilder;
 import com.luizvaldiero.calculator.dto.CalculatorRequestDTO;
 import com.luizvaldiero.calculator.dto.CalculatorResposeDTO;
 import com.luizvaldiero.calculator.model.ExpressionNode;
+import com.luizvaldiero.calculator.model.ResultModel;
 import com.luizvaldiero.calculator.model.Token;
+import com.luizvaldiero.calculator.repository.ResultModelRepository;
 
 @Service
 public class CalculatorServiceImpl implements CalculatorService {
@@ -26,19 +27,32 @@ public class CalculatorServiceImpl implements CalculatorService {
 	
 	private final BreakExpression breakExpression;
 	private final ExpressionTreeBuilder expressionTreeBuilder;
+	private final ResultModelRepository resultModelRepository;
 	
 	@Autowired
-	public CalculatorServiceImpl(BreakExpression breakExpression, ExpressionTreeBuilder expressionTreeBuilder) {
+	public CalculatorServiceImpl(
+			BreakExpression breakExpression,
+			ExpressionTreeBuilder expressionTreeBuilder,
+			ResultModelRepository resultModelRepository
+	) {
 		this.breakExpression = breakExpression;
 		this.expressionTreeBuilder = expressionTreeBuilder;
+		this.resultModelRepository = resultModelRepository;
 	}
 	
 	@Override
-	public CalculatorResposeDTO calculate(@Valid CalculatorRequestDTO request) {
+	public CalculatorResposeDTO calculate(CalculatorRequestDTO request) {
 		String expression = request.getExpressao().replaceAll("\s", "");
 		Boolean isValid = expression.matches(VALID_EXPRESSION);
 		if (!isValid) {
 			throw new RuntimeException("Expressão mal formada");
+		}
+		
+		Optional<ResultModel> resultModalOpt = resultModelRepository.findByExpression(expression);
+		
+		if (resultModalOpt.isPresent()) {
+			BigDecimal result = resultModalOpt.get().getResult();
+			return new CalculatorResposeDTO(result);
 		}
 		
 		List<Token> tokens = breakExpression.execute(expression);		
@@ -47,7 +61,12 @@ public class CalculatorServiceImpl implements CalculatorService {
 		BigDecimal result = root.calculate()
 				.setScale(N_PRECISION, RoundingMode.UP);
 		
-		return new CalculatorResposeDTO(result);
+		try {
+			ResultModel resultModel = new ResultModel(expression, result);
+			resultModelRepository.save(resultModel);
+		} catch (Exception e) {}
+		
+		return new CalculatorResposeDTO(new BigDecimal(result.toPlainString()));
 	}
 
 }
