@@ -8,6 +8,7 @@ import static org.mockito.Mockito.times;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
+import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,7 +27,9 @@ import com.luizvaldiero.calculator.dto.CalculatorRequestDTO;
 import com.luizvaldiero.calculator.dto.CalculatorResposeDTO;
 import com.luizvaldiero.calculator.enums.TokenType;
 import com.luizvaldiero.calculator.model.ExpressionNode;
+import com.luizvaldiero.calculator.model.ResultModel;
 import com.luizvaldiero.calculator.model.Token;
+import com.luizvaldiero.calculator.repository.ResultModelRepository;
 
 @ExtendWith(SpringExtension.class)
 class CalculatorServiceImplTest {
@@ -36,14 +39,21 @@ class CalculatorServiceImplTest {
 	
 	@Mock private BreakExpression breakExpression;
 	@Mock private ExpressionTreeBuilder expressionTreeBuilder;
+	@Mock private ResultModelRepository resultModelRepository;
 
 	private CalculatorRequestDTO inputDTO = new CalculatorRequestDTO("1.123");
 	private ExpressionNode rootNodeFake = mock(ExpressionNode.class);
 	
 	@BeforeEach
 	void setup() {
-		
-		BDDMockito.when(rootNodeFake.calculate()).thenReturn(BigDecimal.valueOf(1.123));
+
+		BDDMockito.when(resultModelRepository.findByExpression(ArgumentMatchers.anyString()))
+			.thenReturn(Optional.empty());
+
+		BDDMockito.when(resultModelRepository.save(ArgumentMatchers.any(ResultModel.class)))
+			.thenReturn(null);
+		BDDMockito.when(rootNodeFake.calculate())
+			.thenReturn(BigDecimal.valueOf(1.123));
 		BDDMockito.when(breakExpression.execute(ArgumentMatchers.anyString()))
 			.thenReturn(List.of());
 		BDDMockito.when(expressionTreeBuilder.create(ArgumentMatchers.anyList()))
@@ -51,10 +61,10 @@ class CalculatorServiceImplTest {
 	}
 	
 	@Test
-	@DisplayName("call breakExpression with expression params")
-	void callBreakExpression_WithExpressionParams() {
+	@DisplayName("return result When calculate valid expression")
+	void returnResult_whenCalculateValidExpression() {
 		List<Token> tokens = List.of(new Token("1.123", TokenType.NUMBER));
-		BigDecimal expectedResult = BigDecimal.valueOf(1.12).setScale(2, RoundingMode.UP);
+		BigDecimal expectedResult = BigDecimal.valueOf(1.123).setScale(2, RoundingMode.UP);
 		
 		BDDMockito.when(rootNodeFake.calculate()).thenReturn(BigDecimal.valueOf(1.123));
 		BDDMockito.when(breakExpression.execute(ArgumentMatchers.anyString()))
@@ -64,8 +74,31 @@ class CalculatorServiceImplTest {
 		
 		CalculatorResposeDTO resultDto = calculatorServiceImpl.calculate(inputDTO);
 
+		BDDMockito.verify(resultModelRepository, times(1)).findByExpression(inputDTO.getExpressao());
 		BDDMockito.verify(breakExpression, times(1)).execute(inputDTO.getExpressao());
 		BDDMockito.verify(expressionTreeBuilder, times(1)).create(tokens);
+		BDDMockito.verify(resultModelRepository, times(1)).save(ArgumentMatchers.any(ResultModel.class));
+		
+		assertThat(resultDto.getResultado()).isEqualTo(expectedResult);
+	}
+
+	
+	@Test
+	@DisplayName("return result When restoring the calculated expression")
+	void returnResult_whenRestoringTheCalculatedExpression() {
+		BigDecimal expectedResult = BigDecimal.valueOf(1.123).setScale(2, RoundingMode.UP);
+		
+		ResultModel resultModel = new ResultModel("1.123", expectedResult);
+		
+		BDDMockito.when(resultModelRepository.findByExpression(ArgumentMatchers.anyString()))
+			.thenReturn(Optional.of(resultModel));
+		
+		CalculatorResposeDTO resultDto = calculatorServiceImpl.calculate(inputDTO);
+
+		BDDMockito.verify(resultModelRepository, times(1)).findByExpression("1.123");
+		BDDMockito.verify(breakExpression, times(0)).execute(ArgumentMatchers.anyString());
+		BDDMockito.verify(expressionTreeBuilder, times(0)).create(ArgumentMatchers.anyList());
+		BDDMockito.verify(resultModelRepository, times(0)).save(ArgumentMatchers.any());
 		
 		assertThat(resultDto.getResultado()).isEqualTo(expectedResult);
 	}
