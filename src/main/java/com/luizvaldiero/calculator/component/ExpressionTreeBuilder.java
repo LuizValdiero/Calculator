@@ -56,7 +56,7 @@ public class ExpressionTreeBuilder {
 			return createNextNode(control, expression);
 		}
 		if (TokenType.DIVISION.equals(nextToken.getType())) {
-			ExpressionNode expression = new BranchExpressionNode((BigDecimal a, BigDecimal b) -> a.divide(b, RoundingMode.DOWN));
+			ExpressionNode expression = new BranchExpressionNode((BigDecimal a, BigDecimal b) -> a.divide(b, RoundingMode.UP));
 			expression.setLeft(root);
 			expression.setRight(createNextNode(control, expression));
 			return createNextNode(control, expression);

@@ -2,18 +2,36 @@ package com.luizvaldiero.calculator.service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.List;
 
 import javax.validation.Valid;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.luizvaldiero.calculator.component.BreakExpression;
+import com.luizvaldiero.calculator.component.ExpressionTreeBuilder;
 import com.luizvaldiero.calculator.dto.CalculatorRequestDTO;
 import com.luizvaldiero.calculator.dto.CalculatorResposeDTO;
+import com.luizvaldiero.calculator.model.ExpressionNode;
+import com.luizvaldiero.calculator.model.Token;
 
+@Service
 public class CalculatorServiceImpl implements CalculatorService {
 	private static final int N_PRECISION = 2;
-
+	
 	private static final String NUMBER = "\\d+\\.?\\d*";
 	private static final String OPERATORS = "((-\\+?)|(\\+-?)|([(\\*)/][\\+-]?))";
 	private static final String VALID_EXPRESSION = "^([\\+-]?" + NUMBER + ")(" + OPERATORS + NUMBER + ")*$";
+	
+	private final BreakExpression breakExpression;
+	private final ExpressionTreeBuilder expressionTreeBuilder;
+	
+	@Autowired
+	public CalculatorServiceImpl(BreakExpression breakExpression, ExpressionTreeBuilder expressionTreeBuilder) {
+		this.breakExpression = breakExpression;
+		this.expressionTreeBuilder = expressionTreeBuilder;
+	}
 	
 	@Override
 	public CalculatorResposeDTO calculate(@Valid CalculatorRequestDTO request) {
@@ -22,17 +40,13 @@ public class CalculatorServiceImpl implements CalculatorService {
 		if (!isValid) {
 			throw new RuntimeException("Expressão mal formada");
 		}
-/*
- // calculador
-
- 1) receber expressao e verificar formação
- 2) quebrar expressao nos operadores - parser -> gerar árvore
- 3) fazer calculo recursivo com base na order de prioridade
-*/
-
-
-		BigDecimal result = new BigDecimal(2.237);
-		result.setScale(N_PRECISION, RoundingMode.DOWN);
+		
+		List<Token> tokens = breakExpression.execute(expression);		
+		ExpressionNode root = expressionTreeBuilder.create(tokens);
+		
+		BigDecimal result = root.calculate()
+				.setScale(N_PRECISION, RoundingMode.UP);
+		
 		return new CalculatorResposeDTO(result);
 	}
 
