@@ -34,9 +34,9 @@ class ExpressionTreeBuilderTest {
 	@DisplayName("return tree with addition")
 	void treeWithAddition() {
 		List<Token> tokens = List.of(
-				new Token("left", TokenType.NUMBER),
-				new Token("root", TokenType.ADDITION),
-				new Token("right", TokenType.NUMBER)
+				new Token("left", TokenType.NUMBER, 0),
+				new Token("root", TokenType.ADDITION, 2),
+				new Token("right", TokenType.NUMBER, 0)
 				);
 		ExpressionNode root = expressionTreeBuilder.create(tokens);
 		ExpressionNode left = root.getLeft();
@@ -52,9 +52,9 @@ class ExpressionTreeBuilderTest {
 	@DisplayName("return tree with subtraction")
 	void treeWithSubtraction() {
 		List<Token> tokens = List.of(
-				new Token("left", TokenType.NUMBER),
-				new Token("root", TokenType.SUBTRACTION),
-				new Token("right", TokenType.NUMBER)
+				new Token("left", TokenType.NUMBER, 0),
+				new Token("root", TokenType.SUBTRACTION, 2),
+				new Token("right", TokenType.NUMBER, 0)
 				);
 		ExpressionNode root = expressionTreeBuilder.create(tokens);
 		ExpressionNode left = root.getLeft();
@@ -70,9 +70,9 @@ class ExpressionTreeBuilderTest {
 	@DisplayName("return tree with multiplication")
 	void treeWithMultiplication() {
 		List<Token> tokens = List.of(
-				new Token("left", TokenType.NUMBER),
-				new Token("root", TokenType.MULTIPLICATION),
-				new Token("right", TokenType.NUMBER)
+				new Token("left", TokenType.NUMBER, 0),
+				new Token("root", TokenType.MULTIPLICATION, 1),
+				new Token("right", TokenType.NUMBER, 0)
 				);
 		ExpressionNode root = expressionTreeBuilder.create(tokens);
 		ExpressionNode left = root.getLeft();
@@ -88,9 +88,9 @@ class ExpressionTreeBuilderTest {
 	@DisplayName("return tree with division")
 	void treeWithDivision() {
 		List<Token> tokens = List.of(
-				new Token("left", TokenType.NUMBER),
-				new Token("root", TokenType.DIVISION),
-				new Token("right", TokenType.NUMBER)
+				new Token("left", TokenType.NUMBER, 0),
+				new Token("root", TokenType.DIVISION, 1),
+				new Token("right", TokenType.NUMBER, 0)
 				);
 		ExpressionNode root = expressionTreeBuilder.create(tokens);
 		ExpressionNode left = root.getLeft();
@@ -106,11 +106,11 @@ class ExpressionTreeBuilderTest {
 	@DisplayName("return tree with division and subtraction")
 	void treeWithDivisionAndSubtraction() {
 		List<Token> tokens = List.of(
-				new Token("3-1", TokenType.NUMBER),
-				new Token("2-1", TokenType.DIVISION),
-				new Token("3-2", TokenType.NUMBER),
-				new Token("1", TokenType.SUBTRACTION),
-				new Token("2-2", TokenType.NUMBER)
+				new Token("3-1", TokenType.NUMBER, 0),
+				new Token("2-1", TokenType.DIVISION, 1),
+				new Token("3-2", TokenType.NUMBER, 0),
+				new Token("1", TokenType.SUBTRACTION, 2),
+				new Token("2-2", TokenType.NUMBER, 0)
 				);
 		ExpressionNode root = expressionTreeBuilder.create(tokens);
 		ExpressionNode n21 = root.getLeft();
@@ -132,11 +132,11 @@ class ExpressionTreeBuilderTest {
 	@DisplayName("return tree with subtraction and division")
 	void treeWithSubtractionAndDivision() {
 		List<Token> tokens = List.of(
-				new Token("2-1", TokenType.NUMBER),
-				new Token("1", TokenType.SUBTRACTION),
-				new Token("3-1", TokenType.NUMBER),
-				new Token("2-2", TokenType.DIVISION),
-				new Token("3-2", TokenType.NUMBER)
+				new Token("2-1", TokenType.NUMBER, 0),
+				new Token("1", TokenType.SUBTRACTION, 2),
+				new Token("3-1", TokenType.NUMBER, 0),
+				new Token("2-2", TokenType.DIVISION, 1),
+				new Token("3-2", TokenType.NUMBER, 0)
 				);
 		ExpressionNode root = expressionTreeBuilder.create(tokens);
 		ExpressionNode n21 = root.getLeft();
@@ -154,5 +154,46 @@ class ExpressionTreeBuilderTest {
 		assertLeafExpressionNode(n31, tokens.get(2));
 		assertLeafExpressionNode(n32, tokens.get(4));
 	}
+	
 
+	
+	@Test
+	@DisplayName("return tree with subtraction and division")
+	void ahhhhh() {
+//		"2.2/-1.7*12+10*33/4.3"
+		List<Token> tokens = List.of(
+				new Token("2.2", TokenType.NUMBER, 0),
+				new Token("/", TokenType.DIVISION, 1),
+				new Token("-1.7", TokenType.NUMBER, 0),
+				new Token("*", TokenType.MULTIPLICATION, 1),
+				new Token("12", TokenType.NUMBER, 0),
+				new Token("+", TokenType.ADDITION, 2),
+				new Token("10", TokenType.NUMBER, 0),
+				new Token("*", TokenType.MULTIPLICATION, 1),
+				new Token("33", TokenType.NUMBER, 0),
+				new Token("/", TokenType.DIVISION, 1),
+				new Token("4.3", TokenType.NUMBER, 0)
+				);
+
+		
+		
+		ExpressionNode root = expressionTreeBuilder.create(tokens);
+		root.calculate();
+		ExpressionNode n21 = root.getLeft();
+		ExpressionNode n22 = root.getRight();
+		ExpressionNode n31 = n22.getLeft();
+		ExpressionNode n32 = n22.getRight();
+		
+//		assertThat(root).isInstanceOfAny(BranchExpressionNode.class);
+//		assertThat(root).hasFieldOrProperty("calculator");
+//		
+//		assertLeafExpressionNode(n21, tokens.get(0));
+//		assertThat(n22).isInstanceOfAny(BranchExpressionNode.class);
+//		assertThat(n22).hasFieldOrProperty("calculator");
+//
+//		assertLeafExpressionNode(n31, tokens.get(2));
+//		assertLeafExpressionNode(n32, tokens.get(4));
+	}
+
+	
 }

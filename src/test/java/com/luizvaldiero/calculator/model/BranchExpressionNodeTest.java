@@ -1,6 +1,9 @@
 package com.luizvaldiero.calculator.model;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -39,4 +42,29 @@ class BranchExpressionNodeTest {
 		.hasMessage("Division by zero");
 	}
 
+	@Test
+	@DisplayName("CHANGE TEST RENAME")
+	void notThros_OTHERS_NAME() {
+		ExpressionNode left = new ExpressionNode() {
+			
+			@Override
+			public BigDecimal calculate() {
+				return new BigDecimal("2");
+			}
+		};
+		ExpressionNode rigth = new ExpressionNode() {
+			
+			@Override
+			public BigDecimal calculate() {
+				return new BigDecimal("3");
+			}
+		};
+
+		
+		ExpressionNode sut = new BranchExpressionNode((a, b) -> a.divide(b, RoundingMode.UP));
+		sut.setLeft(left);
+		sut.setRight(rigth);
+		
+		assertDoesNotThrow(() -> sut.calculate());
+	}
 }

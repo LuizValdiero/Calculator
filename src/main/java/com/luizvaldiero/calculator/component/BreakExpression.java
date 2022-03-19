@@ -30,29 +30,29 @@ public class BreakExpression {
 		int end = index+1;
 		String caracter = expression.substring(index, end);
 		if ("*".equals(caracter)) {
-			return Pair.of(end, new Token("*", TokenType.MULTIPLICATION));
+			return Pair.of(end, new Token("*", TokenType.MULTIPLICATION, 1));
 		}
 		if ("/".equals(caracter)) {
-			return Pair.of(end, new Token("/", TokenType.DIVISION));
+			return Pair.of(end, new Token("/", TokenType.DIVISION, 1));
 		}
 		if ("(".equals(caracter)) {
-			return Pair.of(end, new Token("(", TokenType.PARENTHESES_OPEN));
+			return Pair.of(end, new Token("(", TokenType.PARENTHESES_OPEN, 0));
 		}
 		if (")".equals(caracter)) {
-			return Pair.of(end, new Token(")", TokenType.PARENTHESES_CLOSE));
+			return Pair.of(end, new Token(")", TokenType.PARENTHESES_CLOSE, 0));
 		}
 		if ("+".equals(caracter)) {
 			if(index > 0 && !expression.substring(index-1, index).matches(OPERATORS)) {
-				return Pair.of(end, new Token("+", TokenType.ADDITION));
+				return Pair.of(end, new Token("+", TokenType.ADDITION, 2));
 			}
 		}
 		if ("-".equals(caracter)) {
 			if(index > 0 && !expression.substring(index-1, index).matches(OPERATORS)) {
-				return Pair.of(end, new Token("-", TokenType.SUBTRACTION));
+				return Pair.of(end, new Token("-", TokenType.SUBTRACTION, 2));
 			}
 		}
 		while (end < length && !expression.substring(end, end+1).matches(OPERATORS)) end++;
 		String token = expression.substring(index, end);
-		return Pair.of(end, new Token(token, TokenType.NUMBER));
+		return Pair.of(end, new Token(token, TokenType.NUMBER, 0));
 	}
 }

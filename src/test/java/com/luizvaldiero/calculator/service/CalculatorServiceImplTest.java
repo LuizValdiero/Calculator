@@ -63,7 +63,7 @@ class CalculatorServiceImplTest {
 	@Test
 	@DisplayName("return result When calculate valid expression")
 	void returnResult_whenCalculateValidExpression() {
-		List<Token> tokens = List.of(new Token("1.123", TokenType.NUMBER));
+		List<Token> tokens = List.of(new Token("1.123", TokenType.NUMBER, 0));
 		BigDecimal expectedResult = BigDecimal.valueOf(1.123).setScale(2, RoundingMode.UP);
 		
 		BDDMockito.when(rootNodeFake.calculate()).thenReturn(BigDecimal.valueOf(1.123));

@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 
 import com.luizvaldiero.calculator.component.BreakExpression;
 import com.luizvaldiero.calculator.component.ExpressionTreeBuilder;
+import com.luizvaldiero.calculator.component.ReversePolishNotationCalculator;
+import com.luizvaldiero.calculator.component.ShuntingYardAlgorithm;
 import com.luizvaldiero.calculator.dto.CalculatorRequestDTO;
 import com.luizvaldiero.calculator.dto.CalculatorResposeDTO;
 import com.luizvaldiero.calculator.model.ExpressionNode;
@@ -56,9 +58,12 @@ public class CalculatorServiceImpl implements CalculatorService {
 		}
 		
 		List<Token> tokens = breakExpression.execute(expression);		
-		ExpressionNode root = expressionTreeBuilder.create(tokens);
+		//ExpressionNode root = expressionTreeBuilder.create(tokens);
+		ShuntingYardAlgorithm sya = new ShuntingYardAlgorithm();
+		List<Token> rpnList = sya.execute(tokens);
+		ReversePolishNotationCalculator rpnCalculator = new ReversePolishNotationCalculator();
 		
-		BigDecimal result = root.calculate()
+		BigDecimal result = rpnCalculator.calculateInfixNotation(rpnList)
 				.setScale(N_PRECISION, RoundingMode.UP);
 		
 		try {

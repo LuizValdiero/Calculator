@@ -20,7 +20,7 @@ class LeafExpressionNodeTest {
 	@DisplayName("return value from token")
 	void test() {
 		String input = "-2.1";
-		ExpressionNode expression = new LeafExpressionNode(new Token(input, TokenType.NUMBER));
+		ExpressionNode expression = new LeafExpressionNode(new Token(input, TokenType.NUMBER, 0));
 		BigDecimal expected = new BigDecimal(input);
 		
 		assertThat(expression.calculate()).isEqualTo(expected);
