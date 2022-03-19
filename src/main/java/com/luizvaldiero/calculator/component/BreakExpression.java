@@ -12,6 +12,7 @@ import com.luizvaldiero.calculator.model.Token;
 @Component
 public class BreakExpression {
 	private static final String OPERATORS = "^(\\+|-|\\*|/)$";
+	private static final String NUMBER = "^([\\+-]?\\d+\\.?\\d*)$";	
 	
 	public List<Token> execute(String expression) {
 		List<Token> tokens = new LinkedList<>();
@@ -30,10 +31,10 @@ public class BreakExpression {
 		int end = index+1;
 		String caracter = expression.substring(index, end);
 		if ("*".equals(caracter)) {
-			return Pair.of(end, new Token("*", TokenType.MULTIPLICATION, 1));
+			return Pair.of(end, new Token("*", TokenType.BINARY_OPERATORS, 1));
 		}
 		if ("/".equals(caracter)) {
-			return Pair.of(end, new Token("/", TokenType.DIVISION, 1));
+			return Pair.of(end, new Token("/", TokenType.BINARY_OPERATORS, 1));
 		}
 		if ("(".equals(caracter)) {
 			return Pair.of(end, new Token("(", TokenType.PARENTHESES_OPEN, 0));
@@ -43,16 +44,19 @@ public class BreakExpression {
 		}
 		if ("+".equals(caracter)) {
 			if(index > 0 && !expression.substring(index-1, index).matches(OPERATORS)) {
-				return Pair.of(end, new Token("+", TokenType.ADDITION, 2));
+				return Pair.of(end, new Token("+", TokenType.BINARY_OPERATORS, 2));
 			}
 		}
 		if ("-".equals(caracter)) {
 			if(index > 0 && !expression.substring(index-1, index).matches(OPERATORS)) {
-				return Pair.of(end, new Token("-", TokenType.SUBTRACTION, 2));
+				return Pair.of(end, new Token("-", TokenType.BINARY_OPERATORS, 2));
 			}
 		}
 		while (end < length && !expression.substring(end, end+1).matches(OPERATORS)) end++;
 		String token = expression.substring(index, end);
+		if (!token.matches(NUMBER)) {
+			throw new IllegalStateException("invalid token: '" + token + "' between " + index + "..." + (end-1) );
+		}
 		return Pair.of(end, new Token(token, TokenType.NUMBER, 0));
 	}
 }
