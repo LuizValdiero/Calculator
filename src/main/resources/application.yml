@@ -1,0 +1,27 @@
+spring:
+  flyway:
+    url: jdbc:h2:mem:calculator_api
+    user: calc_api
+    password: calc_api
+
+  datasource:
+    url: jdbc:h2:mem:calculator_api
+    driverClassName: org.h2.Driver
+    username: calc_api
+    password: calc_api
+  
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate.ddl-auto: validate
+    show-sql: false
+
+  h2:
+    console: 
+      enabled: true
+      path: /h2
+  
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          key-value: classpath:public.pem
