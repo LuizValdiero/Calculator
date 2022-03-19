@@ -7,6 +7,7 @@ import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Component;
 
 import com.luizvaldiero.calculator.enums.TokenType;
+import com.luizvaldiero.calculator.exception.InvalidExpressionException;
 import com.luizvaldiero.calculator.model.Token;
 
 @Component
@@ -55,7 +56,7 @@ public class BreakExpression {
 		while (end < length && !expression.substring(end, end+1).matches(OPERATORS)) end++;
 		String token = expression.substring(index, end);
 		if (!token.matches(NUMBER)) {
-			throw new IllegalStateException("invalid token: '" + token + "' between " + index + "..." + (end-1) );
+			throw new InvalidExpressionException("invalid token: '" + token + "' between " + index + "..." + (end-1) );
 		}
 		return Pair.of(end, new Token(token, TokenType.NUMBER, 0));
 	}

@@ -12,6 +12,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.luizvaldiero.calculator.enums.TokenType;
+import com.luizvaldiero.calculator.exception.InvalidExpressionException;
 import com.luizvaldiero.calculator.model.Token;
 
 @ExtendWith(SpringExtension.class)
@@ -74,11 +75,11 @@ class BreakExpressionTest {
 		BreakExpression breakExpression = new BreakExpression();
 		
 		Assertions.assertThatThrownBy(() -> breakExpression.execute(expression))
-			.isInstanceOf(RuntimeException.class)
+			.isInstanceOf(InvalidExpressionException.class)
 			.hasMessage(expectedExceptionMessage);
 		
 		Assertions.assertThatThrownBy(() -> breakExpression.execute(expression2))
-			.isInstanceOf(RuntimeException.class)
+			.isInstanceOf(InvalidExpressionException.class)
 			.hasMessage(expectedExceptionMessage2);
 	}
 
