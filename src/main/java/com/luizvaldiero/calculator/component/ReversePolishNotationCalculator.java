@@ -7,9 +7,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.function.BiFunction;
 
+import org.springframework.stereotype.Component;
+
 import com.luizvaldiero.calculator.enums.TokenType;
 import com.luizvaldiero.calculator.model.Token;
 
+@Component
 public class ReversePolishNotationCalculator {
 //	https://en.wikipedia.org/wiki/Reverse_Polish_notation
 	private BiFunction<BigDecimal, BigDecimal, BigDecimal> operatorsFactoryGetFunction(String operator) {

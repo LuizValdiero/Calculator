@@ -9,12 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.luizvaldiero.calculator.component.BreakExpression;
-import com.luizvaldiero.calculator.component.ExpressionTreeBuilder;
 import com.luizvaldiero.calculator.component.ReversePolishNotationCalculator;
 import com.luizvaldiero.calculator.component.ShuntingYardAlgorithm;
 import com.luizvaldiero.calculator.dto.CalculatorRequestDTO;
 import com.luizvaldiero.calculator.dto.CalculatorResposeDTO;
-import com.luizvaldiero.calculator.model.ExpressionNode;
 import com.luizvaldiero.calculator.model.ResultModel;
 import com.luizvaldiero.calculator.model.Token;
 import com.luizvaldiero.calculator.repository.ResultModelRepository;
@@ -28,17 +26,21 @@ public class CalculatorServiceImpl implements CalculatorService {
 	private static final String VALID_EXPRESSION = "^([\\+-]?" + NUMBER + ")(" + OPERATORS + NUMBER + ")*$";
 	
 	private final BreakExpression breakExpression;
-	private final ExpressionTreeBuilder expressionTreeBuilder;
 	private final ResultModelRepository resultModelRepository;
+	
+	private final ShuntingYardAlgorithm shuntingYardAlgorithm;
+	private final ReversePolishNotationCalculator reversePolishNotationCalculator;
 	
 	@Autowired
 	public CalculatorServiceImpl(
 			BreakExpression breakExpression,
-			ExpressionTreeBuilder expressionTreeBuilder,
+			ShuntingYardAlgorithm shuntingYardAlgorithm,
+			ReversePolishNotationCalculator reversePolishNotationCalculator,
 			ResultModelRepository resultModelRepository
 	) {
 		this.breakExpression = breakExpression;
-		this.expressionTreeBuilder = expressionTreeBuilder;
+		this.shuntingYardAlgorithm = shuntingYardAlgorithm;
+		this.reversePolishNotationCalculator = reversePolishNotationCalculator;
 		this.resultModelRepository = resultModelRepository;
 	}
 	
@@ -57,13 +59,11 @@ public class CalculatorServiceImpl implements CalculatorService {
 			return new CalculatorResposeDTO(result);
 		}
 		
-		List<Token> tokens = breakExpression.execute(expression);		
-		//ExpressionNode root = expressionTreeBuilder.create(tokens);
-		ShuntingYardAlgorithm sya = new ShuntingYardAlgorithm();
-		List<Token> rpnList = sya.execute(tokens);
-		ReversePolishNotationCalculator rpnCalculator = new ReversePolishNotationCalculator();
+		List<Token> tokens = breakExpression.execute(expression);
 		
-		BigDecimal result = rpnCalculator.calculateInfixNotation(rpnList)
+		List<Token> tokensInPostFixNotation = shuntingYardAlgorithm.execute(tokens);
+		
+		BigDecimal result = reversePolishNotationCalculator.calculateInfixNotation(tokensInPostFixNotation)
 				.setScale(N_PRECISION, RoundingMode.UP);
 		
 		try {

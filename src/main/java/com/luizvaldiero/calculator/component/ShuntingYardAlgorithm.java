@@ -17,7 +17,6 @@ public class ShuntingYardAlgorithm {
 		List<Token> output = new LinkedList<>();
 		List<Token> queue = new LinkedList<>();
 		
-		
 		tokens.forEach((Token token) -> {
 			if (TokenType.NUMBER.equals(token.getType())) {
 				output.add(token);
