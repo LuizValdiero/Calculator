@@ -15,20 +15,20 @@ public class ShuntingYardAlgorithm {
 		
 	public List<Token> execute(List<Token> tokens) {
 		List<Token> output = new LinkedList<>();
-		List<Token> queue = new LinkedList<>();
+		List<Token> stack = new LinkedList<>();
 		
 		tokens.forEach((Token token) -> {
 			if (TokenType.NUMBER.equals(token.getType())) {
 				output.add(token);
 			} else {
-				if (!queue.isEmpty() && queue.get(0).hasGreaterPrecedenceThan(token)) {
-					output.addAll(queue);
-					queue.clear();
+				if (!stack.isEmpty() && stack.get(0).hasGreaterPrecedenceThan(token)) {
+					output.addAll(stack);
+					stack.clear();
 				}
-				queue.add(0, token);
+				stack.add(0, token);
 			}
 		});		
-		output.addAll(queue);
+		output.addAll(stack);
 		
 		return output;
 	}
