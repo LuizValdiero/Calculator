@@ -8,6 +8,7 @@ import java.util.Optional;
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.luizvaldiero.calculator.component.BreakExpression;
@@ -84,9 +85,13 @@ public class CalculatorServiceImpl implements CalculatorService {
 		}
 		
 		ResultModel resultModel = new ResultModel(expression, result);
-		resultModelRepository.save(resultModel);
 		
-		return new CalculatorResposeDTO(new BigDecimal(result.toPlainString()));
+		try {
+			resultModelRepository.save(resultModel);
+		} catch (DataIntegrityViolationException e) {
+			e.printStackTrace();
+		}
+		
+		return new CalculatorResposeDTO(result);
 	}
-
 }
