@@ -19,7 +19,11 @@ spring:
     console: 
       enabled: true
       path: /h2
-  
-security:
-  jwt:
-    key-value: classpath:public.pem
+      
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          public-key-location: public.pem
+
+          

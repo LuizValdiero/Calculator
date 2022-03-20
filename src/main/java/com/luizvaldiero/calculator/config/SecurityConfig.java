@@ -13,7 +13,7 @@ import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-	@Value("${security.jwt.key-value}")
+	@Value("${spring.security.oauth2.resourceserver.jwt.public-key-location}")
 	RSAPublicKey key;
 
 	@Override
