@@ -1,7 +1,6 @@
 package com.luizvaldiero.calculator.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.Mockito.times;
 
 import java.math.BigDecimal;
@@ -9,7 +8,6 @@ import java.math.RoundingMode;
 import java.util.List;
 import java.util.Optional;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -41,11 +39,12 @@ class CalculatorServiceImplTest {
 	@Mock private ShuntingYardAlgorithm shuntingYardAlgorithm;
 	@Mock private ReversePolishNotationCalculator reversePolishNotationCalculator;
 
-	private CalculatorRequestDTO inputDTO = new CalculatorRequestDTO("1.123");
+	private CalculatorRequestDTO inputDTO;
 	
 	@BeforeEach
 	void setup() {
 
+		inputDTO = new CalculatorRequestDTO("1.123");
 		BDDMockito.when(resultModelRepository.findByExpression(ArgumentMatchers.anyString()))
 			.thenReturn(Optional.empty());
 
@@ -69,14 +68,11 @@ class CalculatorServiceImplTest {
 		List<Token> tokensInPostFix = List.of(new Token("1.123", TokenType.NUMBER, 0));
 
 		BigDecimal expectedResult = BigDecimal.valueOf(1.123).setScale(2, RoundingMode.UP);
-		
-		
-		
+				
 		BDDMockito.when(breakExpression.execute(ArgumentMatchers.anyString()))
 			.thenReturn(tokens);
 		BDDMockito.when(shuntingYardAlgorithm.execute(ArgumentMatchers.anyList()))
 			.thenReturn(tokensInPostFix);
-
 		BDDMockito.when(reversePolishNotationCalculator.calculateInfixNotation(ArgumentMatchers.anyList()))
 			.thenReturn(BigDecimal.valueOf(1.123));
 				
@@ -110,45 +106,5 @@ class CalculatorServiceImplTest {
 		BDDMockito.verify(resultModelRepository, times(0)).save(ArgumentMatchers.any());
 		
 		assertThat(resultDto.getResultado()).isEqualTo(expectedResult);
-	}
-	
-	@Test
-	@DisplayName("Throws If the expression is malformed")
-	void throws_malformed_expression() {
-
-		List<String> expressions = List.of(
-				"", " ", "--10", "++10", "*10", "/10",
-				"2++1", "2--1", "2//+1", "2//1",
-				"2**2", "2*/2", "2/*2", "10.0.2",
-				"20.0++1", "20.0.3+1", "20.0.3+1",
-				"20.0.3+1", "2*2.0.0", "2--2.0",
-				"2++2.0", "2**2.0", "2//2.0"
-		);
-		for(String expression: expressions) {
-			CalculatorRequestDTO request = new CalculatorRequestDTO(expression);
-			
-			Assertions.assertThatThrownBy(() -> calculatorServiceImpl.calculate(request))
-			.isInstanceOf(RuntimeException.class)
-			.hasMessage("Expressão mal formada");
-		}
-	}
-	
-	@Test
-	@DisplayName("Not throws If the expression is perfect")
-	void notThrows_perfect_expression() {
-
-		List<String> expressions = List.of(
-				"1", "10", "10.2", "+10.2", "-10.2",
-				"1.", "1.+1.", "2+3", "2-3", "2*3",
-				"2/3", "10/3", "2+-3", "2-+3",
-				"2*-3", "2*+3", "2/-3",
-				"2/+3", "-2.3243-2.43",
-				"-98*-2.44+32/5.00+76*3/1.5"
-		);
-		for(String expression: expressions) {
-			CalculatorRequestDTO request = new CalculatorRequestDTO(expression);
-			
-			assertDoesNotThrow(() -> calculatorServiceImpl.calculate(request));
-		}
 	}
 }

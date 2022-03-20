@@ -5,6 +5,8 @@ import java.math.RoundingMode;
 import java.util.List;
 import java.util.Optional;
 
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,15 +17,18 @@ import com.luizvaldiero.calculator.dto.CalculatorRequestDTO;
 import com.luizvaldiero.calculator.dto.CalculatorResposeDTO;
 import com.luizvaldiero.calculator.model.ResultModel;
 import com.luizvaldiero.calculator.model.Token;
+import com.luizvaldiero.calculator.model.lexical.ExtractToken;
+import com.luizvaldiero.calculator.model.lexical.ExtractTokenAddition;
+import com.luizvaldiero.calculator.model.lexical.ExtractTokenDivision;
+import com.luizvaldiero.calculator.model.lexical.ExtractTokenInvalidExpression;
+import com.luizvaldiero.calculator.model.lexical.ExtractTokenMultiplication;
+import com.luizvaldiero.calculator.model.lexical.ExtractTokenNumber;
+import com.luizvaldiero.calculator.model.lexical.ExtractTokenSubtraction;
 import com.luizvaldiero.calculator.repository.ResultModelRepository;
 
 @Service
 public class CalculatorServiceImpl implements CalculatorService {
 	private static final int N_PRECISION = 2;
-	
-	private static final String NUMBER = "\\d+\\.?\\d*";
-	private static final String OPERATORS = "((-\\+?)|(\\+-?)|([(\\*)/][\\+-]?))";
-	private static final String VALID_EXPRESSION = "^([\\+-]?" + NUMBER + ")(" + OPERATORS + NUMBER + ")*$";
 	
 	private final BreakExpression breakExpression;
 	private final ResultModelRepository resultModelRepository;
@@ -44,13 +49,22 @@ public class CalculatorServiceImpl implements CalculatorService {
 		this.resultModelRepository = resultModelRepository;
 	}
 	
+	@PostConstruct
+	public void initialize() {
+		ExtractToken extractToken = new ExtractTokenAddition();
+		extractToken
+			.setNextExtracToken(new ExtractTokenAddition())
+			.setNextExtracToken(new ExtractTokenSubtraction())
+			.setNextExtracToken(new ExtractTokenMultiplication())
+			.setNextExtracToken(new ExtractTokenDivision())
+			.setNextExtracToken(new ExtractTokenNumber())
+			.setNextExtracToken(new ExtractTokenInvalidExpression());
+		breakExpression.setExtractToken(extractToken);
+	}
+
 	@Override
 	public CalculatorResposeDTO calculate(CalculatorRequestDTO request) {
 		String expression = request.getExpressao().replaceAll("\s", "");
-		Boolean isValid = expression.matches(VALID_EXPRESSION);
-		if (!isValid) {
-			throw new RuntimeException("Expressão mal formada");
-		}
 		
 		Optional<ResultModel> resultModalOpt = resultModelRepository.findByExpression(expression);
 		
