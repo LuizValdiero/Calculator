@@ -20,8 +20,6 @@ spring:
       enabled: true
       path: /h2
   
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          key-value: classpath:public.pem
+security:
+  jwt:
+    key-value: classpath:public.pem

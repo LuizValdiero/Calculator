@@ -1,4 +1,4 @@
-package com.luizvaldiero.calculator;
+package com.luizvaldiero.calculator.config;
 
 import java.security.interfaces.RSAPublicKey;
 
@@ -13,7 +13,7 @@ import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-	@Value("${spring.security.oauth2.resourceserver.jwt.key-value}")
+	@Value("${security.jwt.key-value}")
 	RSAPublicKey key;
 
 	@Override
