@@ -18,6 +18,7 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.luizvaldiero.calculator.component.BreakExpression;
@@ -61,8 +62,8 @@ class CalculatorServiceImplTest {
 	}
 	
 	@Test
-	@DisplayName("return result When calculate valid expression")
-	void returnResult_whenCalculateValidExpression() {
+	@DisplayName("returns result When calculate valid expression")
+	void returnsResult_whenCalculateValidExpression() {
 		CalculatorRequestDTO inputDTO = new CalculatorRequestDTO("1.123");
 		List<Token> tokens = List.of(new Token("1.123", TokenType.NUMBER, 0));
 		List<Token> tokensInPostFix = List.of(new Token("1.123", TokenType.NUMBER, 0));
@@ -88,8 +89,8 @@ class CalculatorServiceImplTest {
 	}
 	
 	@Test
-	@DisplayName("return result When restoring the calculated expression")
-	void returnResult_whenRestoringTheCalculatedExpression() {
+	@DisplayName("returns result When restoring the calculated expression")
+	void returnsResult_whenRestoringTheCalculatedExpression() {
 		CalculatorRequestDTO inputDTO = new CalculatorRequestDTO("1.123");
 		
 		BigDecimal expectedResult = BigDecimal.valueOf(1.123);
@@ -110,8 +111,32 @@ class CalculatorServiceImplTest {
 	}
 	
 	@Test
-	@DisplayName("return 4 If expression is equals to '2+2'")
-	void return4_ifExpressionIsEqualTo2Plus2() {
+	@DisplayName("returns result Even if an error occurs to save")
+	void returnsResult_evenIfAnErrorOccursToSave() {
+		CalculatorRequestDTO inputDTO = new CalculatorRequestDTO("1.123");
+		
+		BigDecimal expectedResult = BigDecimal.valueOf(1.123);
+		ResultModel resultModel = new ResultModel("1.123", BigDecimal.valueOf(1.123));
+		
+		BDDMockito.when(resultModelRepository.findByExpression(ArgumentMatchers.anyString()))
+			.thenReturn(Optional.of(resultModel));
+		BDDMockito.when(resultModelRepository.save(ArgumentMatchers.any(ResultModel.class)))
+			.thenThrow(new DataIntegrityViolationException("value too long for column...."));
+
+		CalculatorResposeDTO resultDto = assertDoesNotThrow(() -> calculatorServiceImpl.calculate(inputDTO));
+
+		BDDMockito.verify(resultModelRepository, times(1)).findByExpression("1.123");
+		BDDMockito.verify(breakExpression, times(0)).execute(ArgumentMatchers.anyString());
+		BDDMockito.verify(shuntingYardAlgorithm, times(0)).execute(ArgumentMatchers.anyList());
+		BDDMockito.verify(reversePolishNotationCalculator, times(0)).calculateInfixNotation(ArgumentMatchers.anyList());
+		BDDMockito.verify(resultModelRepository, times(0)).save(ArgumentMatchers.any());
+		
+		assertThat(resultDto.getResultado()).isEqualTo(expectedResult);
+	}
+	
+	@Test
+	@DisplayName("returns 4 If expression is equals to '2+2'")
+	void returns4_ifExpressionIsEqualTo2Plus2() {
 		CalculatorRequestDTO inputDTO = new CalculatorRequestDTO("2+2");
 		List<Token> tokens = List.of(
 				new Token("2", TokenType.NUMBER, 0),
@@ -143,8 +168,8 @@ class CalculatorServiceImplTest {
 	}
 
 	@Test
-	@DisplayName("return 4.4 If expression is equals to '2.2+2.2'")
-	void return4dot4_ifExpressionIsEqualTo2dot2Plus2dot2() {
+	@DisplayName("returns 4.4 If expression is equals to '2.2+2.2'")
+	void returns4dot4_ifExpressionIsEqualTo2dot2Plus2dot2() {
 		CalculatorRequestDTO inputDTO = new CalculatorRequestDTO("2.2+2.2");
 		List<Token> tokens = List.of(
 				new Token("2.2", TokenType.NUMBER, 0),
@@ -187,8 +212,8 @@ class CalculatorServiceImplTest {
 	}
 
 	@Test
-	@DisplayName("return 10.29 If expression is equals to '2.3*2.3+5'")
-	void return10dot29_ifExpressionIsEqualTo2dot3Multiply2dot3Plus5() {
+	@DisplayName("returns 10.29 If expression is equals to '2.3*2.3+5'")
+	void returns10dot29_ifExpressionIsEqualTo2dot3Multiply2dot3Plus5() {
 		CalculatorRequestDTO inputDTO = new CalculatorRequestDTO("2.3*2.3+5");
 		List<Token> anyTokens = List.of();
 		List<Token> anyTokensInPostFix = List.of();
@@ -215,8 +240,8 @@ class CalculatorServiceImplTest {
 	}
 
 	@Test
-	@DisplayName("return 0.78 If expression is equals to '2.33/3'")
-	void return0dot78_ifExpressionIsEqualTo2dot33DividedBy3() {
+	@DisplayName("returns 0.78 If expression is equals to '2.33/3'")
+	void returns0dot78_ifExpressionIsEqualTo2dot33DividedBy3() {
 		CalculatorRequestDTO inputDTO = new CalculatorRequestDTO("2.33/3");
 		List<Token> tokens = List.of(
 				new Token("2.33", TokenType.NUMBER, 0),
