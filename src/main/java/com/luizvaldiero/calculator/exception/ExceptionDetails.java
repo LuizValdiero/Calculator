@@ -4,6 +4,11 @@ public class ExceptionDetails {
 	Integer statusCode;
 	String error;
 	
+	public ExceptionDetails() {
+		statusCode = 500;
+		error = "undefined";
+	}
+	
 	public ExceptionDetails(String error, Integer statusCode) {
 		this.error = error;
 		this.statusCode = statusCode;

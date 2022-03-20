@@ -77,13 +77,14 @@ public class CalculatorServiceImpl implements CalculatorService {
 		
 		List<Token> tokensInPostFixNotation = shuntingYardAlgorithm.execute(tokens);
 		
-		BigDecimal result = reversePolishNotationCalculator.calculateInfixNotation(tokensInPostFixNotation)
-				.setScale(N_PRECISION, RoundingMode.UP);
+		BigDecimal result = reversePolishNotationCalculator.calculateInfixNotation(tokensInPostFixNotation);
 		
-		try {
-			ResultModel resultModel = new ResultModel(expression, result);
-			resultModelRepository.save(resultModel);
-		} catch (Exception e) {}
+		if (result.scale() > N_PRECISION || result.precision() > N_PRECISION) {
+			result = result.setScale(N_PRECISION, RoundingMode.UP).stripTrailingZeros();
+		}
+		
+		ResultModel resultModel = new ResultModel(expression, result);
+		resultModelRepository.save(resultModel);
 		
 		return new CalculatorResposeDTO(new BigDecimal(result.toPlainString()));
 	}

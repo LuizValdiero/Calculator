@@ -5,6 +5,8 @@ import java.math.BigDecimal;
 public class CalculatorResposeDTO {
 	BigDecimal resultado;
 
+	public CalculatorResposeDTO() { }
+
 	public CalculatorResposeDTO(BigDecimal resultado) {
 		this.resultado = resultado;
 	}
