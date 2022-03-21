@@ -9,6 +9,6 @@ public class ExtractTokenInvalidExpression extends ExtractToken {
 
 	@Override
 	public Pair<Integer, Token> extract(String expression, String character, Integer index) {
-		throw new InvalidExpressionException("invalid token(" + index + "): '" + character + "'");
+		throw new InvalidExpressionException("invalid token (line " + index + "): '" + character + "'");
 	}
 }

@@ -90,9 +90,9 @@ class BreakExpressionTest {
 	@DisplayName("throws if expression contains invalid token")
 	void throws_ifExpressionContainsInvalidToken() {
 		String expression = "-3./j-2.533";
-		String expectedExceptionMessage = "invalid token(4): 'j'";
+		String expectedExceptionMessage = "invalid token (line 4): 'j'";
 		String expression2 = "-3./-j2.533";
-		String expectedExceptionMessage2 = "invalid token(5): 'j'";
+		String expectedExceptionMessage2 = "invalid token (line 5): 'j'";
 
 		Assertions.assertThatThrownBy(() -> breakExpression.execute(expression))
 			.isInstanceOf(InvalidExpressionException.class)
