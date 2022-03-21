@@ -1,5 +1,7 @@
 package com.luizvaldiero.calculator.controller;
 
+import javax.validation.Valid;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,7 +23,7 @@ public class CalculatorController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<CalculatorResposeDTO> calculate(@RequestBody CalculatorRequestDTO request) {
+	public ResponseEntity<CalculatorResposeDTO> calculate(@RequestBody @Valid CalculatorRequestDTO request) {
 		CalculatorResposeDTO result = calculatorService.calculate(request);
 		return ResponseEntity.ok(result);
 	}

@@ -1,7 +1,10 @@
 package com.luizvaldiero.calculator.dto;
 
+import javax.validation.constraints.NotBlank;
+
 public class CalculatorRequestDTO {
 
+	@NotBlank
 	private String expressao;
 
 	public CalculatorRequestDTO() {}
