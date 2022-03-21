@@ -15,21 +15,6 @@ import com.luizvaldiero.calculator.model.Token;
 
 @Component
 public class ReversePolishNotationCalculator {
-//	https://en.wikipedia.org/wiki/Reverse_Polish_notation
-	private BiFunction<BigDecimal, BigDecimal, BigDecimal> operatorsFactoryGetFunction(String operator) {
-		switch (operator) {
-		case "+":
-			return (BigDecimal a, BigDecimal b) -> a.add(b);
-		case "-":
-			return (BigDecimal a, BigDecimal b) -> a.subtract(b);
-		case "*":
-			return (BigDecimal a, BigDecimal b) -> a.multiply(b);
-		case "/":
-			return (BigDecimal a, BigDecimal b) -> a.divide(b, RoundingMode.UP);
-		default:
-			throw new InvalidExpressionException("Invalid Operator '" + operator + "'");
-		}
-	}
 	
 	public BigDecimal calculateInfixNotation(List<Token> tokens) {
 		Deque<BigDecimal> stack = new LinkedList<>();
@@ -48,5 +33,20 @@ public class ReversePolishNotationCalculator {
 		});
 		
 		return stack.removeLast();
+	}
+	
+	private BiFunction<BigDecimal, BigDecimal, BigDecimal> operatorsFactoryGetFunction(String operator) {
+		switch (operator) {
+		case "+":
+			return (BigDecimal a, BigDecimal b) -> a.add(b);
+		case "-":
+			return (BigDecimal a, BigDecimal b) -> a.subtract(b);
+		case "*":
+			return (BigDecimal a, BigDecimal b) -> a.multiply(b);
+		case "/":
+			return (BigDecimal a, BigDecimal b) -> a.divide(b, RoundingMode.UP);
+		default:
+			throw new InvalidExpressionException("Invalid Operator '" + operator + "'");
+		}
 	}
 }
