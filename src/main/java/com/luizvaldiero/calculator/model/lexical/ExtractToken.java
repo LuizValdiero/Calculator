@@ -26,7 +26,7 @@ public abstract class ExtractToken {
 	
 	protected final Pair<Integer, Token> next(String expression, String character, TokenType lastTokenType, Integer index) {
 		return nextExtractTokenOpt
-				.orElseThrow(() -> new InvalidExpressionException("invalid token (line " + index + "): '" + character + "'"))
+				.orElseThrow(() -> new InvalidExpressionException("unexpected token (" + index + "): '" + character + "'"))
 				.extract(expression, character, lastTokenType, index);
 	}
 }
