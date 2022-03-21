@@ -6,7 +6,7 @@ Rest Calculator - Java/Spring Boot
 
 API para calcular expressões matemáticas que contenham os operadores de adição ('+'), subtração ('-'), multiplicação ('*') e divisão ('/'). Ela retorna o resultado com 2 dígitos de precisão.
 
-Enviar requsição POST para o entry-point '/v1/calculator' com payload no formato JSON:
+Enviar requesição POST para o entry-point '/v1/calculator' com payload no formato JSON:
 
 ```
 {
@@ -14,7 +14,7 @@ Enviar requsição POST para o entry-point '/v1/calculator' com payload no forma
 }
 ```
 
-Para autenticação da chamada, adicionar aos headers o token abaixo
+Para autenticação da requesição, adicionar aos headers o token abaixo:
 
 ```
 Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJDYWxjdWxhdG9yQXV0aGVudGljYXRpb25Ub2tlbiIsImlhdCI6MTUxNjIzOTAyMn0.VABuaCLS7IJJUa9VsswYjnx1SGVuJJgOFyc8GtFLD8dpkgqqNhdhlR57d68XoeTMoU10ytj9bI2gEO3k-9HlOKWgP37FHpYWG3gDWqO9WBDAXwSJRy7c4jdvXloXTD4kuq3t-AQ6BoASN4iyYPBcr7lkhw4pPVc840vaQ9hnvmqsqf4xogqwKl6wAdj33weaq25Gpfxo7QSaq2yl9lcsIkLZHvIjv2YEDLi2EQVNGbPJzp8gUrCjUmpfw7I6jFHQ0RQkTwQioO7wVtP76zsPjCrjbDNnOYDhMKo1DfNvtcGp8olW8QsLtfGSd6ZR8ZGg4BFzPqdaUHcwJFEFK_ZaEw
