@@ -10,14 +10,12 @@ import com.luizvaldiero.calculator.model.Token;
 
 @Component
 public class ShuntingYardAlgorithm {
-//	https://pt.stackoverflow.com/questions/6382/receber-uma-express%C3%A3o-e-calcular-em-c
-// transform infix notation to postfix notation
-		
-	public List<Token> execute(List<Token> tokens) {
+
+	public List<Token> transformToPostFixNotation(List<Token> tokensFromInFixNotation) {
 		List<Token> output = new LinkedList<>();
 		List<Token> stack = new LinkedList<>();
 		
-		tokens.forEach((Token token) -> {
+		tokensFromInFixNotation.forEach((Token token) -> {
 			if (TokenType.NUMBER.equals(token.getType())) {
 				output.add(token);
 			} else {

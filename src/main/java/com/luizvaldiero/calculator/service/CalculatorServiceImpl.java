@@ -74,13 +74,13 @@ public class CalculatorServiceImpl implements CalculatorService {
 			return new CalculatorResposeDTO(result);
 		}
 		
-		List<Token> tokens = breakExpression.execute(expression);
+		List<Token> tokensFromInFixNotation = breakExpression.execute(expression);
 		
-		List<Token> tokensInPostFixNotation = shuntingYardAlgorithm.execute(tokens);
+		List<Token> tokensInPostFixNotation = shuntingYardAlgorithm.transformToPostFixNotation(tokensFromInFixNotation);
 		
 		BigDecimal result = reversePolishNotationCalculator.calculateInfixNotation(tokensInPostFixNotation);
 		
-		if (result.scale() > N_PRECISION || result.precision() > N_PRECISION) {
+		if (result.scale() > N_PRECISION) {
 			result = result.setScale(N_PRECISION, RoundingMode.UP).stripTrailingZeros();
 		}
 		
