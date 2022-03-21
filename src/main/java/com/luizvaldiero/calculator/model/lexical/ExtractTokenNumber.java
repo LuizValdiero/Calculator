@@ -15,11 +15,11 @@ public class ExtractTokenNumber extends ExtractToken {
 		if (lastTokenType == TokenType.NUMBER || !character.matches(FIRST_CHARACTER)) {
 			return this.next(expression, character, lastTokenType, index);
 		}
-		
+
 		int end = index+1;
 		Integer length = expression.length();
-		while (end < length && expression.substring(index, end+1).matches(NUMBER)) end++;
 		
+		while (end < length && expression.substring(index, end+1).matches(NUMBER)) end++;
 		String tokenString = expression.substring(index, end);
 		
 		if (!tokenString.matches(NUMBER)) {

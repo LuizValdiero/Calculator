@@ -24,6 +24,11 @@ public abstract class ExtractToken {
 		return nextExtractToken;
 	}
 	
+	protected final boolean isNotTheLastCharacter(String expression, Integer index) {
+		Integer lastIndex = expression.length()-1;
+		return index < lastIndex;
+	}
+	
 	protected final Pair<Integer, Token> next(String expression, String character, TokenType lastTokenType, Integer index) {
 		return nextExtractTokenOpt
 				.orElseThrow(() -> new InvalidExpressionException("unexpected token (" + index + "): '" + character + "'"))
