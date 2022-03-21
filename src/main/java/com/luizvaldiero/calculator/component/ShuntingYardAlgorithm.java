@@ -1,5 +1,6 @@
 package com.luizvaldiero.calculator.component;
 
+import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -13,21 +14,25 @@ public class ShuntingYardAlgorithm {
 
 	public List<Token> transformToPostFixNotation(List<Token> tokensFromInFixNotation) {
 		List<Token> output = new LinkedList<>();
-		List<Token> stack = new LinkedList<>();
+		Deque<Token> stack = new LinkedList<>();
 		
 		tokensFromInFixNotation.forEach((Token token) -> {
-			if (TokenType.NUMBER.equals(token.getType())) {
+			if (TokenType.NUMBER == token.getType()) {
 				output.add(token);
 			} else {
-				if (!stack.isEmpty() && stack.get(0).hasGreaterPrecedenceThan(token)) {
+				if (canNotStack(stack, token)) {
 					output.addAll(stack);
 					stack.clear();
 				}
-				stack.add(0, token);
+				stack.addFirst(token);
 			}
 		});		
 		output.addAll(stack);
 		
 		return output;
+	}
+	
+	public boolean canNotStack(Deque<Token> stack, Token token) {
+		return !stack.isEmpty() && stack.getFirst().hasGreaterPrecedenceThan(token);
 	}
 }
