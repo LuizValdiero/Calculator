@@ -20,7 +20,6 @@ public class ResultModel {
 		this.result = result;
 	}
 
-
 	public String getExpression() {
 		return expression;
 	}

@@ -32,7 +32,7 @@ public class ShuntingYardAlgorithm {
 		return output;
 	}
 	
-	public boolean canNotStack(Deque<Token> stack, Token token) {
+	private boolean canNotStack(Deque<Token> stack, Token token) {
 		return !stack.isEmpty() && stack.getFirst().hasGreaterPrecedenceThan(token);
 	}
 }

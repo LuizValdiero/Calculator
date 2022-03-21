@@ -65,7 +65,7 @@ public class CalculatorServiceImpl implements CalculatorService {
 
 	@Override
 	public CalculatorResposeDTO calculate(CalculatorRequestDTO request) {
-		String expression = request.getExpressao().replaceAll("\s", "");
+		String expression = removeWhitespace(request.getExpressao());
 		
 		Optional<ResultModel> resultModalOpt = resultModelRepository.findByExpression(expression);
 		
@@ -81,7 +81,7 @@ public class CalculatorServiceImpl implements CalculatorService {
 		BigDecimal result = reversePolishNotationCalculator.calculateInfixNotation(tokensInPostFixNotation);
 		
 		if (result.scale() > N_PRECISION) {
-			result = result.setScale(N_PRECISION, RoundingMode.UP).stripTrailingZeros();
+			result = result.setScale(N_PRECISION, RoundingMode.UP);
 		}
 		
 		ResultModel resultModel = new ResultModel(expression, result);
@@ -93,5 +93,9 @@ public class CalculatorServiceImpl implements CalculatorService {
 		}
 		
 		return new CalculatorResposeDTO(result);
+	}
+	
+	private String removeWhitespace(String expression) {
+		return expression.replaceAll("\s", "");
 	}
 }
