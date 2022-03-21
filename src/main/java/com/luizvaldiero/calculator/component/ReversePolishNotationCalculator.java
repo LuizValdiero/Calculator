@@ -10,6 +10,7 @@ import java.util.function.BiFunction;
 import org.springframework.stereotype.Component;
 
 import com.luizvaldiero.calculator.enums.TokenType;
+import com.luizvaldiero.calculator.exception.InvalidExpressionException;
 import com.luizvaldiero.calculator.model.Token;
 
 @Component
@@ -26,7 +27,7 @@ public class ReversePolishNotationCalculator {
 		case "/":
 			return (BigDecimal a, BigDecimal b) -> a.divide(b, RoundingMode.UP);
 		default:
-			throw new IllegalStateException("Operator undefined!");
+			throw new InvalidExpressionException("Invalid Operator '" + operator + "'");
 		}
 	}
 	
