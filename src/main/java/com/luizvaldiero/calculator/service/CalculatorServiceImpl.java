@@ -21,7 +21,6 @@ import com.luizvaldiero.calculator.model.Token;
 import com.luizvaldiero.calculator.model.lexical.ExtractToken;
 import com.luizvaldiero.calculator.model.lexical.ExtractTokenAddition;
 import com.luizvaldiero.calculator.model.lexical.ExtractTokenDivision;
-import com.luizvaldiero.calculator.model.lexical.ExtractTokenInvalidExpression;
 import com.luizvaldiero.calculator.model.lexical.ExtractTokenMultiplication;
 import com.luizvaldiero.calculator.model.lexical.ExtractTokenNumber;
 import com.luizvaldiero.calculator.model.lexical.ExtractTokenSubtraction;
@@ -58,8 +57,7 @@ public class CalculatorServiceImpl implements CalculatorService {
 			.setNextExtracToken(new ExtractTokenSubtraction())
 			.setNextExtracToken(new ExtractTokenMultiplication())
 			.setNextExtracToken(new ExtractTokenDivision())
-			.setNextExtracToken(new ExtractTokenNumber())
-			.setNextExtracToken(new ExtractTokenInvalidExpression());
+			.setNextExtracToken(new ExtractTokenNumber());
 		breakExpression.setExtractToken(extractToken);
 	}
 
@@ -75,7 +73,7 @@ public class CalculatorServiceImpl implements CalculatorService {
 		}
 		
 		List<Token> tokensFromInFixNotation = breakExpression.execute(expression);
-		
+
 		List<Token> tokensInPostFixNotation = shuntingYardAlgorithm.transformToPostFixNotation(tokensFromInFixNotation);
 		
 		BigDecimal result = reversePolishNotationCalculator.calculateInfixNotation(tokensInPostFixNotation);

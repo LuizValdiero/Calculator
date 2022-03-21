@@ -1,20 +1,32 @@
 package com.luizvaldiero.calculator.model.lexical;
 
+import java.util.Optional;
+
 import org.springframework.data.util.Pair;
 
+import com.luizvaldiero.calculator.enums.TokenType;
+import com.luizvaldiero.calculator.exception.InvalidExpressionException;
 import com.luizvaldiero.calculator.model.Token;
 
 public abstract class ExtractToken {
-	private ExtractToken nextExtractToken;
 	
-	public abstract Pair<Integer, Token> extract(String expression, String character, Integer index);
+	private Optional<ExtractToken> nextExtractTokenOpt;
+
+	public ExtractToken() {
+		super();
+		this.nextExtractTokenOpt = Optional.empty();
+	}
+	
+	public abstract Pair<Integer, Token> extract(String expression, String character, TokenType lastTokenType, Integer index);
 
 	public final ExtractToken setNextExtracToken(ExtractToken nextExtractToken) {
-		this.nextExtractToken = nextExtractToken;
+		this.nextExtractTokenOpt = Optional.of(nextExtractToken);
 		return nextExtractToken;
 	}
 	
-	protected final Pair<Integer, Token> next(String expression, String character, Integer index) {
-		return nextExtractToken.extract(expression, character, index);
+	protected final Pair<Integer, Token> next(String expression, String character, TokenType lastTokenType, Integer index) {
+		return nextExtractTokenOpt
+				.orElseThrow(() -> new InvalidExpressionException("invalid token (line " + index + "): '" + character + "'"))
+				.extract(expression, character, lastTokenType, index);
 	}
 }

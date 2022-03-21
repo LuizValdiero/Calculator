@@ -18,7 +18,6 @@ import com.luizvaldiero.calculator.model.Token;
 import com.luizvaldiero.calculator.model.lexical.ExtractToken;
 import com.luizvaldiero.calculator.model.lexical.ExtractTokenAddition;
 import com.luizvaldiero.calculator.model.lexical.ExtractTokenDivision;
-import com.luizvaldiero.calculator.model.lexical.ExtractTokenInvalidExpression;
 import com.luizvaldiero.calculator.model.lexical.ExtractTokenMultiplication;
 import com.luizvaldiero.calculator.model.lexical.ExtractTokenNumber;
 import com.luizvaldiero.calculator.model.lexical.ExtractTokenSubtraction;
@@ -36,8 +35,7 @@ class BreakExpressionTest {
 			.setNextExtracToken(new ExtractTokenSubtraction())
 			.setNextExtracToken(new ExtractTokenMultiplication())
 			.setNextExtracToken(new ExtractTokenDivision())
-			.setNextExtracToken(new ExtractTokenNumber())
-			.setNextExtracToken(new ExtractTokenInvalidExpression());
+			.setNextExtracToken(new ExtractTokenNumber());
 		
 		breakExpression = new BreakExpression();
 		breakExpression.setExtractToken(extractToken);
@@ -92,7 +90,7 @@ class BreakExpressionTest {
 		String expression = "-3./j-2.533";
 		String expectedExceptionMessage = "invalid token (line 4): 'j'";
 		String expression2 = "-3./-j2.533";
-		String expectedExceptionMessage2 = "invalid token (line 5): 'j'";
+		String expectedExceptionMessage2 = "invalid token (line 4): '-'";
 
 		Assertions.assertThatThrownBy(() -> breakExpression.execute(expression))
 			.isInstanceOf(InvalidExpressionException.class)

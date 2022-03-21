@@ -11,18 +11,21 @@ public class ExtractTokenNumber extends ExtractToken {
 	private static final Integer PRECEDENCE = 0;
 
 	@Override
-	public Pair<Integer, Token> extract(String expression, String character, Integer index) {
-		if (!character.matches(FIRST_CHARACTER)) {
-			return this.next(expression, character, index);
+	public Pair<Integer, Token> extract(String expression, String character, TokenType lastTokenType, Integer index) {
+		if (lastTokenType == TokenType.NUMBER || !character.matches(FIRST_CHARACTER)) {
+			return this.next(expression, character, lastTokenType, index);
 		}
-		if (index > 0 && expression.substring(index-1, index).matches("[\\d\\.]")) {
-			return this.next(expression, character, index);
-		}
+		
 		int end = index+1;
 		Integer length = expression.length();
 		while (end < length && expression.substring(index, end+1).matches(NUMBER)) end++;
 		
 		String tokenString = expression.substring(index, end);
+		
+		if (!tokenString.matches(NUMBER)) {
+			return this.next(expression, character, lastTokenType, index);
+		}
+		
 		Token token = new Token(tokenString, TokenType.NUMBER, PRECEDENCE);
 		
 		return Pair.of(end, token);

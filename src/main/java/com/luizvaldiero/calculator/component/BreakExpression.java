@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Component;
 
+import com.luizvaldiero.calculator.enums.TokenType;
 import com.luizvaldiero.calculator.model.Token;
 import com.luizvaldiero.calculator.model.lexical.ExtractToken;
 
@@ -22,11 +23,14 @@ public class BreakExpression {
 		Integer index = 0;
 		Integer length = expression.length();
 		
+		TokenType lastTokenType = null;
 		while (index < length) {
 			String character = expression.substring(index, index+1);
-			Pair<Integer, Token> result = extractToken.extract(expression, character, index);
+			Pair<Integer, Token> result = extractToken.extract(expression, character, lastTokenType, index);
 			index = result.getFirst();
-			tokens.add(result.getSecond());
+			Token token = result.getSecond();
+			tokens.add(token);
+			lastTokenType = token.getType();
 		}
 		return tokens;
 	}
