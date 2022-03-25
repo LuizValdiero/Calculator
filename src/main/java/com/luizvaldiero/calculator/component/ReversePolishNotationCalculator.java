@@ -16,7 +16,7 @@ import com.luizvaldiero.calculator.model.Token;
 @Component
 public class ReversePolishNotationCalculator {
 	
-	public BigDecimal calculateInfixNotation(List<Token> tokens) {
+	public BigDecimal calculatePostfixNotation(List<Token> tokens) {
 		Deque<BigDecimal> stack = new LinkedList<>();
 		
 		tokens.forEach((Token token) -> {

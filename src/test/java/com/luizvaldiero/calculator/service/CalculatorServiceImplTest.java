@@ -57,7 +57,7 @@ class CalculatorServiceImplTest {
 		BDDMockito.when(shuntingYardAlgorithm.transformToPostFixNotation(ArgumentMatchers.anyList()))
 			.thenReturn(List.of());
 
-		BDDMockito.when(reversePolishNotationCalculator.calculateInfixNotation(ArgumentMatchers.anyList()))
+		BDDMockito.when(reversePolishNotationCalculator.calculatePostfixNotation(ArgumentMatchers.anyList()))
 			.thenReturn(BigDecimal.valueOf(1));
 	}
 	
@@ -74,7 +74,7 @@ class CalculatorServiceImplTest {
 			.thenReturn(tokens);
 		BDDMockito.when(shuntingYardAlgorithm.transformToPostFixNotation(ArgumentMatchers.anyList()))
 			.thenReturn(tokensInPostFix);
-		BDDMockito.when(reversePolishNotationCalculator.calculateInfixNotation(ArgumentMatchers.anyList()))
+		BDDMockito.when(reversePolishNotationCalculator.calculatePostfixNotation(ArgumentMatchers.anyList()))
 			.thenReturn(BigDecimal.valueOf(1.123));
 				
 		CalculatorResposeDTO resultDto = calculatorServiceImpl.calculate(inputDTO);
@@ -82,7 +82,7 @@ class CalculatorServiceImplTest {
 		BDDMockito.verify(resultModelRepository, times(1)).findByExpression(inputDTO.getExpressao());
 		BDDMockito.verify(breakExpression, times(1)).execute(inputDTO.getExpressao());
 		BDDMockito.verify(shuntingYardAlgorithm, times(1)).transformToPostFixNotation(tokens);
-		BDDMockito.verify(reversePolishNotationCalculator, times(1)).calculateInfixNotation(tokensInPostFix);
+		BDDMockito.verify(reversePolishNotationCalculator, times(1)).calculatePostfixNotation(tokensInPostFix);
 		BDDMockito.verify(resultModelRepository, times(1)).save(ArgumentMatchers.any(ResultModel.class));
 		
 		assertThat(resultDto.getResultado()).isEqualTo(expectedResult);
@@ -104,7 +104,7 @@ class CalculatorServiceImplTest {
 		BDDMockito.verify(resultModelRepository, times(1)).findByExpression("1.123");
 		BDDMockito.verify(breakExpression, times(0)).execute(ArgumentMatchers.anyString());
 		BDDMockito.verify(shuntingYardAlgorithm, times(0)).transformToPostFixNotation(ArgumentMatchers.anyList());
-		BDDMockito.verify(reversePolishNotationCalculator, times(0)).calculateInfixNotation(ArgumentMatchers.anyList());
+		BDDMockito.verify(reversePolishNotationCalculator, times(0)).calculatePostfixNotation(ArgumentMatchers.anyList());
 		BDDMockito.verify(resultModelRepository, times(0)).save(ArgumentMatchers.any());
 		
 		assertThat(resultDto.getResultado()).isEqualTo(expectedResult);
@@ -128,7 +128,7 @@ class CalculatorServiceImplTest {
 		BDDMockito.verify(resultModelRepository, times(1)).findByExpression("1.123");
 		BDDMockito.verify(breakExpression, times(0)).execute(ArgumentMatchers.anyString());
 		BDDMockito.verify(shuntingYardAlgorithm, times(0)).transformToPostFixNotation(ArgumentMatchers.anyList());
-		BDDMockito.verify(reversePolishNotationCalculator, times(0)).calculateInfixNotation(ArgumentMatchers.anyList());
+		BDDMockito.verify(reversePolishNotationCalculator, times(0)).calculatePostfixNotation(ArgumentMatchers.anyList());
 		BDDMockito.verify(resultModelRepository, times(0)).save(ArgumentMatchers.any());
 		
 		assertThat(resultDto.getResultado()).isEqualTo(expectedResult);
@@ -154,7 +154,7 @@ class CalculatorServiceImplTest {
 			.thenReturn(tokens);
 		BDDMockito.when(shuntingYardAlgorithm.transformToPostFixNotation(ArgumentMatchers.anyList()))
 			.thenReturn(tokensInPostFix);
-		BDDMockito.when(reversePolishNotationCalculator.calculateInfixNotation(ArgumentMatchers.anyList()))
+		BDDMockito.when(reversePolishNotationCalculator.calculatePostfixNotation(ArgumentMatchers.anyList()))
 			.thenReturn(BigDecimal.valueOf(4));
 
 		CalculatorResposeDTO resultDto = assertDoesNotThrow(() -> calculatorServiceImpl.calculate(inputDTO));
@@ -162,7 +162,7 @@ class CalculatorServiceImplTest {
 		BDDMockito.verify(resultModelRepository, times(1)).findByExpression(inputDTO.getExpressao());
 		BDDMockito.verify(breakExpression, times(1)).execute(inputDTO.getExpressao());
 		BDDMockito.verify(shuntingYardAlgorithm, times(1)).transformToPostFixNotation(tokens);
-		BDDMockito.verify(reversePolishNotationCalculator, times(1)).calculateInfixNotation(tokensInPostFix);
+		BDDMockito.verify(reversePolishNotationCalculator, times(1)).calculatePostfixNotation(tokensInPostFix);
 		BDDMockito.verify(resultModelRepository, times(1)).save(ArgumentMatchers.any(ResultModel.class));		
 		assertThat(resultDto.getResultado()).isEqualTo(expectedResult);
 	}
@@ -192,7 +192,7 @@ class CalculatorServiceImplTest {
 			.thenReturn(tokens);
 		BDDMockito.when(shuntingYardAlgorithm.transformToPostFixNotation(ArgumentMatchers.anyList()))
 			.thenReturn(tokensInPostFix);
-		BDDMockito.when(reversePolishNotationCalculator.calculateInfixNotation(ArgumentMatchers.anyList()))
+		BDDMockito.when(reversePolishNotationCalculator.calculatePostfixNotation(ArgumentMatchers.anyList()))
 			.thenReturn(BigDecimal.valueOf(4.4));
 
 		CalculatorResposeDTO resultDto = assertDoesNotThrow(() -> calculatorServiceImpl.calculate(inputDTO));
@@ -207,7 +207,7 @@ class CalculatorServiceImplTest {
 		BDDMockito.verify(resultModelRepository, times(2)).findByExpression(inputDTO.getExpressao());
 		BDDMockito.verify(breakExpression, times(1)).execute(inputDTO.getExpressao());
 		BDDMockito.verify(shuntingYardAlgorithm, times(1)).transformToPostFixNotation(tokens);
-		BDDMockito.verify(reversePolishNotationCalculator, times(1)).calculateInfixNotation(tokensInPostFix);
+		BDDMockito.verify(reversePolishNotationCalculator, times(1)).calculatePostfixNotation(tokensInPostFix);
 		BDDMockito.verify(resultModelRepository, times(1)).save(ArgumentMatchers.any(ResultModel.class));		
 	}
 
@@ -226,7 +226,7 @@ class CalculatorServiceImplTest {
 			.thenReturn(anyTokens);
 		BDDMockito.when(shuntingYardAlgorithm.transformToPostFixNotation(ArgumentMatchers.anyList()))
 			.thenReturn(anyTokensInPostFix);
-		BDDMockito.when(reversePolishNotationCalculator.calculateInfixNotation(ArgumentMatchers.anyList()))
+		BDDMockito.when(reversePolishNotationCalculator.calculatePostfixNotation(ArgumentMatchers.anyList()))
 			.thenReturn(BigDecimal.valueOf(10.29));
 
 		CalculatorResposeDTO resultDto = assertDoesNotThrow(() -> calculatorServiceImpl.calculate(inputDTO));
@@ -235,7 +235,7 @@ class CalculatorServiceImplTest {
 		BDDMockito.verify(resultModelRepository, times(1)).findByExpression(inputDTO.getExpressao());
 		BDDMockito.verify(breakExpression, times(1)).execute(inputDTO.getExpressao());
 		BDDMockito.verify(shuntingYardAlgorithm, times(1)).transformToPostFixNotation(anyTokens);
-		BDDMockito.verify(reversePolishNotationCalculator, times(1)).calculateInfixNotation(anyTokensInPostFix);
+		BDDMockito.verify(reversePolishNotationCalculator, times(1)).calculatePostfixNotation(anyTokensInPostFix);
 		BDDMockito.verify(resultModelRepository, times(1)).save(ArgumentMatchers.any(ResultModel.class));		
 	}
 
@@ -261,7 +261,7 @@ class CalculatorServiceImplTest {
 			.thenReturn(tokens);
 		BDDMockito.when(shuntingYardAlgorithm.transformToPostFixNotation(ArgumentMatchers.anyList()))
 			.thenReturn(tokensInPostFix);
-		BDDMockito.when(reversePolishNotationCalculator.calculateInfixNotation(ArgumentMatchers.anyList()))
+		BDDMockito.when(reversePolishNotationCalculator.calculatePostfixNotation(ArgumentMatchers.anyList()))
 			.thenReturn(BigDecimal.valueOf(0.776666667));
 
 		CalculatorResposeDTO resultDto = assertDoesNotThrow(() -> calculatorServiceImpl.calculate(inputDTO));
@@ -270,7 +270,7 @@ class CalculatorServiceImplTest {
 		BDDMockito.verify(resultModelRepository, times(1)).findByExpression(inputDTO.getExpressao());
 		BDDMockito.verify(breakExpression, times(1)).execute(inputDTO.getExpressao());
 		BDDMockito.verify(shuntingYardAlgorithm, times(1)).transformToPostFixNotation(tokens);
-		BDDMockito.verify(reversePolishNotationCalculator, times(1)).calculateInfixNotation(tokensInPostFix);
+		BDDMockito.verify(reversePolishNotationCalculator, times(1)).calculatePostfixNotation(tokensInPostFix);
 		BDDMockito.verify(resultModelRepository, times(1)).save(ArgumentMatchers.any(ResultModel.class));		
 	}
 
@@ -295,7 +295,7 @@ class CalculatorServiceImplTest {
 			.thenReturn(tokens);
 		BDDMockito.when(shuntingYardAlgorithm.transformToPostFixNotation(ArgumentMatchers.anyList()))
 			.thenReturn(tokensInPostFix);
-		BDDMockito.when(reversePolishNotationCalculator.calculateInfixNotation(ArgumentMatchers.anyList()))
+		BDDMockito.when(reversePolishNotationCalculator.calculatePostfixNotation(ArgumentMatchers.anyList()))
 			.thenThrow(new RuntimeException("any message"));
 
 		Assertions.assertThatThrownBy(() -> calculatorServiceImpl.calculate(inputDTO))
@@ -305,7 +305,7 @@ class CalculatorServiceImplTest {
 		BDDMockito.verify(resultModelRepository, times(1)).findByExpression(inputDTO.getExpressao());
 		BDDMockito.verify(breakExpression, times(1)).execute(inputDTO.getExpressao());
 		BDDMockito.verify(shuntingYardAlgorithm, times(1)).transformToPostFixNotation(tokens);
-		BDDMockito.verify(reversePolishNotationCalculator, times(1)).calculateInfixNotation(tokensInPostFix);
+		BDDMockito.verify(reversePolishNotationCalculator, times(1)).calculatePostfixNotation(tokensInPostFix);
 		BDDMockito.verify(resultModelRepository, times(0)).save(ArgumentMatchers.any(ResultModel.class));		
 	}
 }

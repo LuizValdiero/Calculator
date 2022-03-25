@@ -76,7 +76,7 @@ public class CalculatorServiceImpl implements CalculatorService {
 
 		List<Token> tokensInPostFixNotation = shuntingYardAlgorithm.transformToPostFixNotation(tokensFromInFixNotation);
 		
-		BigDecimal result = reversePolishNotationCalculator.calculateInfixNotation(tokensInPostFixNotation);
+		BigDecimal result = reversePolishNotationCalculator.calculatePostfixNotation(tokensInPostFixNotation);
 		
 		if (result.scale() > N_PRECISION) {
 			result = result.setScale(N_PRECISION, RoundingMode.UP);
