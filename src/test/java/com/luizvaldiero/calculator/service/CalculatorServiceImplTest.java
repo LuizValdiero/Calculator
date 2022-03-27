@@ -115,21 +115,22 @@ class CalculatorServiceImplTest {
 	void returnsResult_evenIfAnErrorOccursToSave() {
 		CalculatorRequestDTO inputDTO = new CalculatorRequestDTO("1.123");
 		
-		BigDecimal expectedResult = BigDecimal.valueOf(1.123);
-		ResultModel resultModel = new ResultModel("1.123", BigDecimal.valueOf(1.123));
+		BigDecimal expectedResult = BigDecimal.valueOf(1.123).setScale(2, RoundingMode.UP);
 		
 		BDDMockito.when(resultModelRepository.findByExpression(ArgumentMatchers.anyString()))
-			.thenReturn(Optional.of(resultModel));
+			.thenReturn(Optional.empty());
+		BDDMockito.when(reversePolishNotationCalculator.calculatePostfixNotation(ArgumentMatchers.anyList()))
+		.thenReturn(BigDecimal.valueOf(1.123));
 		BDDMockito.when(resultModelRepository.save(ArgumentMatchers.any(ResultModel.class)))
 			.thenThrow(new DataIntegrityViolationException("value too long for column...."));
 
 		CalculatorResposeDTO resultDto = assertDoesNotThrow(() -> calculatorServiceImpl.calculate(inputDTO));
 
 		BDDMockito.verify(resultModelRepository, times(1)).findByExpression("1.123");
-		BDDMockito.verify(breakExpression, times(0)).execute(ArgumentMatchers.anyString());
-		BDDMockito.verify(shuntingYardAlgorithm, times(0)).transformToPostFixNotation(ArgumentMatchers.anyList());
-		BDDMockito.verify(reversePolishNotationCalculator, times(0)).calculatePostfixNotation(ArgumentMatchers.anyList());
-		BDDMockito.verify(resultModelRepository, times(0)).save(ArgumentMatchers.any());
+		BDDMockito.verify(breakExpression, times(1)).execute(ArgumentMatchers.anyString());
+		BDDMockito.verify(shuntingYardAlgorithm, times(1)).transformToPostFixNotation(ArgumentMatchers.anyList());
+		BDDMockito.verify(reversePolishNotationCalculator, times(1)).calculatePostfixNotation(ArgumentMatchers.anyList());
+		BDDMockito.verify(resultModelRepository, times(1)).save(ArgumentMatchers.any());
 		
 		assertThat(resultDto.getResultado()).isEqualTo(expectedResult);
 	}
