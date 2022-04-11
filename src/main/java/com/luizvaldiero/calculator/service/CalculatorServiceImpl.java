@@ -53,7 +53,6 @@ public class CalculatorServiceImpl implements CalculatorService {
 	public void initialize() {
 		ExtractToken extractToken = new ExtractTokenAddition();
 		extractToken
-			.setNextExtracToken(new ExtractTokenAddition())
 			.setNextExtracToken(new ExtractTokenSubtraction())
 			.setNextExtracToken(new ExtractTokenMultiplication())
 			.setNextExtracToken(new ExtractTokenDivision())

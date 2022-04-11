@@ -24,8 +24,7 @@ import com.luizvaldiero.calculator.exception.ExceptionDetails;
 @TestPropertySource(properties = {
 		"spring.flyway.enabled=false",
 	    "spring.jpa.generate-ddl=true",
-	    "spring.jpa.hibernate.ddl-auto=create-drop",
-	    "security.ignored: /**"
+	    "spring.jpa.hibernate.ddl-auto=create-drop"
 })
 class CalculatorIntegrationTest {
 	

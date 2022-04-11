@@ -11,10 +11,18 @@ public class ExtractTokenMultiplication extends ExtractToken {
 
 	@Override
 	public Pair<Integer, Token> extract(String expression, String character, TokenType lastTokenType, Integer index) {
-		if (character.matches(MULTIPLICATION) && lastTokenType == TokenType.NUMBER && isNotTheLastCharacter(expression, index)) {
+		if (isValidToken(expression, character, lastTokenType, index)) {
 			Token token = new Token("*", TokenType.BINARY_OPERATORS, PRECEDENCE);
 			return Pair.of(index+1, token);
 		}
 		return next(expression, character, lastTokenType, index);
+	}
+	
+	private Boolean isValidToken(String expression, String character,
+			TokenType lastTokenType, Integer index) {
+		return character.matches(MULTIPLICATION) &&
+				lastTokenType != TokenType.BINARY_OPERATORS &&
+				index > 0 &&
+				isNotTheLastCharacter(expression, index);				
 	}
 }
